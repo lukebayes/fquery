@@ -1,0 +1,5 @@
+
+h1. FQuery
+
+FQuery is a development framework for Flash content that was entirely inspired by the JavaScript JQuery framework created by John Ressig.
+
