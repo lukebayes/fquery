@@ -1,4 +1,4 @@
-package fquery.utils {
+package fquery.reflect {
 	public class ReflectionVariable extends ReflectionMember {
 		protected var _type:String;
 

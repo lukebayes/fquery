@@ -1,4 +1,4 @@
-package fquery.utils {
+package fquery.reflect {
 	import asunit.framework.TestCase;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;

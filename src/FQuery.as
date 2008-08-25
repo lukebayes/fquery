@@ -42,7 +42,7 @@ package {
 			FQuery.stage = stage;
 		}
 		
-		/* 
+		/*
 		 * Retrieve the global stage reference
 		 */
 		public function get stage():Stage {

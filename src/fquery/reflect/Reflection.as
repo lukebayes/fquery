@@ -1,4 +1,4 @@
-package fquery.utils {
+package fquery.reflect {
 	import flash.utils.Dictionary;
 	import flash.utils.describeType;
 	import flash.utils.getQualifiedClassName;

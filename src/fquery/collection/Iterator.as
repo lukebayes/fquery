@@ -1,4 +1,4 @@
-package fquery.utils {
+package fquery.collection {
 
 	public interface Iterator {
 		function next():Object;

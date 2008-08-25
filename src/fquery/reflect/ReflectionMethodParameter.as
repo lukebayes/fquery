@@ -1,4 +1,4 @@
-package fquery.utils {
+package fquery.reflect {
 	import flash.xml.XMLNode;
 	
 

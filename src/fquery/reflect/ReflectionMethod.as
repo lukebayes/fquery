@@ -1,4 +1,4 @@
-package fquery.utils {
+package fquery.reflect {
 
 	public class ReflectionMethod extends ReflectionMember {
 		protected var _parameters:Array;

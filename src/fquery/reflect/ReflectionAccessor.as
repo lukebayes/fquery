@@ -1,4 +1,4 @@
-package fquery.utils {
+package fquery.reflect {
 
 	public class ReflectionAccessor extends ReflectionMember {
 		protected var _access:String;
