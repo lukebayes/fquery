@@ -6,27 +6,33 @@ package {
 	dynamic public class FQuery {
 		public static var stage:Stage;
 
+		private var found:Array;
 		private var context:DisplayObjectContainer;
 		
 		public function FQuery(query:*=null, context:*=null) {
-			context = validateContext(query, context);
+			found = new Array();
+			validateContext(query, context);
 		}
 		
-		private function validateContext(query:*, context:*):DisplayObjectContainer {
-			if(stage == null) {
-				if(query is Stage) {
-					stage = query;
-				}
-				else if(context is Stage) {
-					stage = context;
-				}
+		private function validateContext(query:*, context:*):void {
+			if(query is Stage) {
+				stage = query;
+			}
+
+			if(context is Stage) {
+				stage = context;
+			}
+			
+			if(query is DisplayObjectContainer) {
+				context = query;
+				found.push(query);
 			}
 			
 			if(stage == null && context == null && query == null) {
-				throw new FQueryError("FQuery has no context, either send in a context by reference with your query like: $('Sprite', anyDisplayObjectContainer), or send in the reference to Stage from your Document Root like $(stage)");
+				throw new FQueryError("FQuery has no context, either send in a context by reference with your query like $(anyDisplayObjectContainer) or $('Sprite', anyDisplayObjectContainer), or at some earlier point in time, send in the reference to Stage from your Document Root like $(stage)");
 			}
 			
-			return stage;
+			this.context =  context || stage;
 		}
 		
 		/*
@@ -47,14 +53,14 @@ package {
 		 * Retrieve the display list element by index
 		 */
 		public function get(index:int):* {
-			return FQuery.stage;
+			return found[index];
 		}
 		
 		/*
 		 * The number of elements found with this query
 		 */
 		public function get length():int {
-			return 1;
+			return found.length;
 		}
 	}
 }

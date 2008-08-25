@@ -7,11 +7,13 @@ package {
 	 */
 
 	import asunit.framework.TestSuite;
+	import fquery.utils.ReflectionTest;
 	import FQueryTest;
 
 	public class AllTests extends TestSuite {
 
 		public function AllTests() {
+			addTest(new fquery.utils.ReflectionTest());
 			addTest(new FQueryTest());
 		}
 	}

@@ -26,29 +26,46 @@ package  {
 		}
 		
 		// Ensure the stage was provided
-		public function testStageProvided():void {
+		public function testStageProvidedBySetUp():void {
 			var query:FQuery = $();
-			assertSame("An empty selector should wrap Stage", getContext().stage, query.get(0));
+			assertSame("An empty selector should wrap Stage", getContext().stage, query.stage);
 		}
 		
-		public function testNoStageProvided():void {
+		// Any query should throw if there is no context AND no global stage provided
+		public function testNoStageProvidedAndNullStage():void {
 			$().stage = null;
 			try {
 				$();
 				fail("FQuery should fail if no context and no stage");
 			}
 			catch(e:Error) {
+				// Forward the failure if encountered
 				if(e is AssertionFailedError) {
 					throw e;
 				}
 			}
 		}
+
+		// The result has no children, but should not throw
+		public function testContextProvidedWithNullStage():void {
+			$().stage = null;
+			var parent:Sprite = new Sprite();
+			var query:FQuery = $('Sprite', parent);
+			assertEquals(0, query.length);
+		}
 		
-//		public function testSpriteSelector():void {
-//			var sprite:Sprite = new Sprite();
-//			var query:FQuery = $(sprite);
-//			assertNotNull(query);
-//			assertSame(sprite, query.get(0));
-//		}
+		public function testContextProvidedAsQueryWithNullStage():void {
+			$().stage = null;
+			var sprite:Sprite = new Sprite();
+			var query:FQuery = $(sprite);
+			assertEquals(1, query.length);
+		}
+		
+		public function testSpriteReferenceSelector():void {
+			var sprite:Sprite = new Sprite();
+			var query:FQuery = $(sprite);
+			assertNotNull(query);
+			assertSame(query.get(0), sprite);
+		}
 	}
 }
