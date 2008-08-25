@@ -27,9 +27,8 @@ package {
 				stage = context;
 			}
 			
-			if(query is DisplayObjectContainer) {
+			if(query is DisplayObjectContainer && context == null) {
 				context = query;
-				found.push(query);
 			}
 			
 			if(stage == null && context == null && query == null) {
@@ -49,13 +48,16 @@ package {
 			else if(query is DisplayObject) {
 				found.push(query);
 			}
+			else if(query == null) {
+				// do nothing?
+			}
 			else {
-				trace(">> Not yet implemented query");
+				trace(">> Not yet implemented query: " + query);
 			}
 		}
 		
 		private function executeQueryString(query:String):void {
-			if(query.match('^.')) {
+			if(query.match(/^\./)) {
 				searchByStyleName(query);
 			}
 			else {
