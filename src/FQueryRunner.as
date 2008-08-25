@@ -1,5 +1,6 @@
 package {
 	import asunit.textui.TestRunner;
+	import fquery.collection.DisplayListIteratorTest;
 	
 	public class FQueryRunner extends TestRunner {
 

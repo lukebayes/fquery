@@ -2,8 +2,8 @@ package fquery.collection {
 	import flash.display.DisplayObjectContainer;
 	
 	public class DisplayObjectIterator implements Iterator {
-		private var context:DisplayObjectContainer;
-		private var index:int;
+		protected var context:DisplayObjectContainer;
+		protected var index:int;
 		
 		public function DisplayObjectIterator(context:DisplayObjectContainer) {
 			this.context = context;

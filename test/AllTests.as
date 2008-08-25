@@ -7,6 +7,7 @@ package {
 	 */
 
 	import asunit.framework.TestSuite;
+	import fquery.collection.DisplayListIteratorTest;
 	import fquery.collection.DisplayObjectIteratorTest;
 	import fquery.reflect.ReflectionTest;
 	import FQueryTest;
@@ -14,6 +15,7 @@ package {
 	public class AllTests extends TestSuite {
 
 		public function AllTests() {
+			addTest(new fquery.collection.DisplayListIteratorTest());
 			addTest(new fquery.collection.DisplayObjectIteratorTest());
 			addTest(new fquery.reflect.ReflectionTest());
 			addTest(new FQueryTest());
