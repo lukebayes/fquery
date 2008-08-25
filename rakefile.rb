@@ -24,6 +24,12 @@ project_model :model do |m|
   # m.libraries             << :corelib
 end
 
+desc 'Compile and run the example'
+flashplayer :example => 'bin/FQueryExample.swf'
+
+mxmlc 'bin/FQueryExample.swf' do |t|
+  t.input = 'src/FQueryExample.as'
+end
 
 desc 'Compile and debug the application'
 debug :debug
