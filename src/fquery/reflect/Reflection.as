@@ -21,6 +21,7 @@ package fquery.reflect {
 		private var _isStatic:Boolean;
 		private var _interfaceNames:Array;
 		private var _extendedClasses:Array;
+		private var _types:Array;
 		private var _variables:Array;
 		private var _readWriteMembers:Array;
 		private var _classReference:Class;
@@ -155,6 +156,13 @@ package fquery.reflect {
 				}
 			}
 			return _extendedClasses;
+		}
+		
+		public function get types():Array {
+			if(_types == null) {
+				_types = extendedClasses.concat(interfaceNames);
+			}
+			return _types;
 		}
 		
 		public function get name():String {

@@ -122,6 +122,10 @@ package fquery.reflect {
 			assertEquals("flash.display::DisplayObjectContainer", reflection.base);
 		}
 		
+		public function testTypes():void {
+			assertEquals("Reflection should have types", 7, reflection.types.length);
+		}
+		
 		public function testGetIsDynamic():void {
 			assertFalse(reflection.isDynamic);
 		}

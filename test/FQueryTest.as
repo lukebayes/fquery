@@ -2,6 +2,7 @@ package  {
 
 	import asunit.framework.TestCase;
 	import flash.display.Sprite;
+	import flash.display.MovieClip;
 	import asunit.errors.AssertionFailedError;
 
 	public class FQueryTest extends TestCase {
@@ -19,7 +20,7 @@ package  {
 			super.tearDown();
 		}
 
-		// Ensure that we can instantiate FQuery with no args
+		// Ensure that we can instantiate fQuery with no args
 		public function testEmptySelector():void {
 			var result:FQuery = $();
 			assertNotNull("An empty selector should not throw", result);
@@ -70,7 +71,56 @@ package  {
 		
 		public function testAllDisplayObjects():void {
 			var result:FQuery = $('DisplayObject');
+			assertEquals(4, result.length);
+		}
+		
+		public function testStyleName():void {
+			var parent:Sprite = new Sprite();
+			var child:MovieClip = new MovieClip();
+			child.styles = ['custom'];
+			parent.addChild(child);
+
+			var result:FQuery = $('.custom', parent);
 			assertEquals(1, result.length);
+		}
+		
+		public function testStyleNameMore():void {
+			var parent:Sprite = new Sprite();
+			var child1:MovieClip = new MovieClip();
+			child1.styles = ['custom'];
+			parent.addChild(child1);
+
+			var child2:MovieClip = new MovieClip();
+			child2.styles = ['custom', 'unique'];
+			parent.addChild(child2);
+			
+			var result:FQuery = $('.custom', parent);
+			assertEquals(2, result.length);
+			
+			result = $('.unique', parent);
+			assertEquals(1, result.length);
+		}
+		
+		public function testDisplayObjectQuery():void {
+			var child:MovieClip = new MovieClip();
+			assertTrue( $(child) is FQuery );
+		}
+		
+		public function testHasClass():void {
+			var child:MovieClip = new MovieClip();
+			child.styles = ['custom'];
+			assertTrue('Should have the custom class', $(child).hasClass('custom') );
+		}
+		
+		public function testEachWithArray():void {
+			var found:Array = new Array();
+			$(['a', 'b', 'c']).each(function(index:Number, item:String):void {
+				found.push({index:index, item:item});
+			});
+
+			assertEquals('a', found[0].item);
+			assertEquals('b', found[1].item);
+			assertEquals('c', found[2].item);
 		}
 	}
 }
