@@ -57,7 +57,6 @@ package {
 				// do nothing?
 				return [];
 			}
-			trace(">> Not yet implemented query: " + query);
 			return null;
 		}
 		
@@ -88,6 +87,8 @@ package {
 				var parts:Array = query.split(' ');
 				var result:FQuery = $(parts.shift(), context);
 				$(parts).each(function(index:Number, part:String):void {
+					// Step into each result passing it as the context,
+					// return only the deepest result - if any
 					result = $(part, result);
 				});
 				var found:Array = new Array();
@@ -129,16 +130,21 @@ package {
 					}
 				}
 			}
-			else {
-				len = found.length;
-				for(i = 0; i < len; i++) {
-					if(found !== item || !hasClass(style, found[i])) {
-						return false;
-					}
-				}
-				return true;
+
+			if(item == null && found == null) {
+				found = this.found;
 			}
-			return false;
+			if(found == null) {
+				found = [];
+			}
+			len = found.length;
+			for(i = 0; i < len; i++) {
+				if(found[i] !== item && !hasClass(style, found[i])) {
+					return false;
+				}
+			}
+
+			return (found.length > 0);
 		}
 		
 		private function searchByDefinition(clazz:String, context:*):Array {

@@ -109,7 +109,8 @@ package  {
 		public function testHasClass():void {
 			var child:MovieClip = new MovieClip();
 			child.styles = ['custom'];
-			assertTrue('Should have the custom class', $(child).hasClass('custom') );
+			var result:Boolean = $(child).hasClass('custom');
+			assertTrue('Child should have custom class', result);
 		}
 		
 		public function testEachWithArray():void {
@@ -123,12 +124,12 @@ package  {
 			assertEquals('c', found[2].item);
 		}
 		
-		public function testEachWithFQuery():void {
-			var result:FQuery = $('Sprite');
-			$(result).each(function(index:Number, item:Sprite):void {
-				trace("item: " + item);
-			});
-		}
+//		public function testEachWithFQuery():void {
+//			var result:FQuery = $('Sprite');
+//			$(result).each(function(index:Number, item:Sprite):void {
+//				trace("item: " + item);
+//			});
+//		}
 		
 		public function testSearchByClass():void {
 			var parent:Sprite = new Sprite();
@@ -172,10 +173,13 @@ package  {
 			child4.styles = ['other']; // This clip should not be in result
 			
 			var found:FQuery = $('.custom MovieClip', parent);
-			assertEquals(2, found.length);
+			assertEquals("There are 2 MovieClips beneath the custom child", 2, found.length);
 			
 			found = $('.custom .other', parent);
-			assertEquals(1, found.length);
+			assertEquals("There is one item with 'other' beneath the custom child", 1, found.length);
+			
+			found = $('.other', parent);
+			assertEquals("There are 2 other clips in the tree", 2, found.length);
 		}
 	}
 }
