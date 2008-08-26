@@ -19,7 +19,7 @@ package  {
 		override protected function tearDown():void {
 			super.tearDown();
 		}
-
+		
 		// Ensure that we can instantiate fQuery with no args
 		public function testEmptySelector():void {
 			var result:FQuery = $();
@@ -121,6 +121,61 @@ package  {
 			assertEquals('a', found[0].item);
 			assertEquals('b', found[1].item);
 			assertEquals('c', found[2].item);
+		}
+		
+		public function testEachWithFQuery():void {
+			var result:FQuery = $('Sprite');
+			$(result).each(function(index:Number, item:Sprite):void {
+				trace("item: " + item);
+			});
+		}
+		
+		public function testSearchByClass():void {
+			var parent:Sprite = new Sprite();
+			var child1:MovieClip = new MovieClip();
+			var child2:MovieClip = new MovieClip();
+			parent.addChild(child1);
+			parent.addChild(child2);
+			
+			var result:FQuery = $('MovieClip', parent);
+			assertEquals(2, result.length);
+		}
+		
+		public function testFQueryContext():void {
+			var parent:Sprite = new Sprite();
+			var child1:MovieClip = new MovieClip();
+			var child2:MovieClip = new MovieClip();
+			parent.addChild(child1);
+			parent.addChild(child2);
+			
+			var result:FQuery = $(parent);
+			assertEquals(1, result.length);
+			
+			result = $('MovieClip', result);
+			assertEquals(2, result.length);
+		}
+		
+		public function testCompoundSelector():void {
+			var parent:Sprite = new Sprite();
+			var child1:MovieClip = new MovieClip();
+			var child2:MovieClip = new MovieClip();
+			var child3:MovieClip = new MovieClip();
+			var child4:MovieClip = new MovieClip();
+			parent.addChild(child1);
+			parent.addChild(child4);
+
+			child1.addChild(child2);
+			child1.addChild(child3);
+
+			child1.styles = ['custom'];
+			child3.styles = ['other'];
+			child4.styles = ['other']; // This clip should not be in result
+			
+			var found:FQuery = $('.custom MovieClip', parent);
+			assertEquals(2, found.length);
+			
+			found = $('.custom .other', parent);
+			assertEquals(1, found.length);
 		}
 	}
 }

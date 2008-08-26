@@ -10,15 +10,20 @@ package {
 		public static var stage:Stage;
 
 		private var found:Array;
-		private var context:DisplayObjectContainer;
 		
 		public function FQuery(query:*=null, context:*=null) {
-			found = new Array();
-			validateContext(query, context);
-			executeQuery(query);
+			found = beginExecuteQuery(query, context);
 		}
 		
-		private function validateContext(query:*, context:*):void {
+		private function beginExecuteQuery(query:*, context:*):Array {
+			if(query is FQuery) {
+				return searchWithFQueryQuery(query);
+			}
+			
+			if(context is FQuery) {
+				return searchWithFQueryContext(query, context);
+			}
+			
 			if(query is Stage) {
 				stage = query;
 			}
@@ -35,48 +40,84 @@ package {
 				throw new FQueryError("FQuery has no context, either send in a context by reference with your query like $(anyDisplayObjectContainer) or $('Sprite', anyDisplayObjectContainer), or at some earlier point in time, send in the reference to Stage from your Document Root like $(stage)");
 			}
 			
-			this.context =  context || stage;
+			return finishExecuteQuery(query, context || stage);
 		}
 		
-		private function executeQuery(query:*):void {
+		private function finishExecuteQuery(query:*, context:*):Array {
 			if(query is Array) {
-				found = query as Array;
+				return query as Array;
 			}
 			else if(query is String) {
-				executeQueryString(query);
+				return executeQueryString(query, context);
 			}
 			else if(query is DisplayObject) {
-				found.push(query);
+				return [query];
 			}
 			else if(query == null) {
 				// do nothing?
+				return [];
 			}
-			else {
-				trace(">> Not yet implemented query: " + query);
-			}
+			trace(">> Not yet implemented query: " + query);
+			return null;
 		}
 		
-		private function executeQueryString(query:String):void {
-			if(query.match(/^\./)) {
-				searchByStyleName(query);
+		private function searchWithFQueryQuery(query:FQuery):Array {
+			var found:Array = new Array();
+			var len:Number = query.length;
+			for(var i:Number = 0; i < len; i++) {
+				found.push(query.get(i));
+			}
+			return found;
+		}
+		
+		private function searchWithFQueryContext(query:*=null, context:*=null):Array {
+			var found:Array = new Array();
+			var len:Number = context.length;
+			var result:Array;
+			for(var i:Number = 0; i < len; i++) {
+				result = beginExecuteQuery(query, context.get(i));
+				result.forEach(function(item:Object, index:Number, arr:Array):void {
+					found.push(item);
+				});
+			}
+			return found;
+		}
+		
+		private function executeQueryString(query:String, context:*):Array {
+			if(query.indexOf(' ') > -1) {
+				var parts:Array = query.split(' ');
+				var result:FQuery = $(parts.shift(), context);
+				$(parts).each(function(index:Number, part:String):void {
+					result = $(part, result);
+				});
+				var found:Array = new Array();
+				result.each(function(index:Number, result:Object):void {
+					found.push(result);
+				});
+				return found;
+			}
+			else if(query.match(/^\./)) {
+				return searchByStyleName(query, context);
 			}
 			else {
-				searchByClass(query);
+				return searchByDefinition(query, context);
 			}
 		}
 
-		private function searchByStyleName(clazz:String):void {
+		private function searchByStyleName(clazz:String, context:*):Array {
+			var found:Array = new Array();
 			var itr:DisplayListIterator = new DisplayListIterator(context);
 			var item:Object;
 			while(itr.hasNext()) {
 				item = itr.next();
-				if(hasClass(clazz, item)) {
+				if(hasClass(clazz, item, found)) {
 					found.push(item);
 				}
 			}
+			return found;
 		}
 		
-		public function hasClass(style:String, item:Object=null):Boolean {
+		public function hasClass(style:String, item:Object=null, found:Array=null):Boolean {
 			style = style.replace(/^\./, '');
 			var len:Number;
 			var i:Number;
@@ -91,7 +132,7 @@ package {
 			else {
 				len = found.length;
 				for(i = 0; i < len; i++) {
-					if(!hasClass(style, found[i])) {
+					if(found !== item || !hasClass(style, found[i])) {
 						return false;
 					}
 				}
@@ -100,7 +141,8 @@ package {
 			return false;
 		}
 		
-		private function searchByClass(clazz:String):void {
+		private function searchByDefinition(clazz:String, context:*):Array {
+			var found:Array = new Array();
 			var itr:DisplayListIterator = new DisplayListIterator(context);
 			var item:Object;
 			while(itr.hasNext()) {
@@ -109,18 +151,26 @@ package {
 					found.push(item);
 				}
 			}
+			return found;
 		}
 		
 		private function isA(item:Object, clazz:String):Boolean {
 			var reflection:Reflection = Reflection.create(item);
+			if(typeMatchesString(reflection.name, clazz)) {
+				return true;
+			}
 			var types:Array = reflection.types;
 			var len:Number = types.length;
 			for(var i:Number = 0; i < len; i++) {
-				if(types[i].match(clazz + '$')) {
+				if(typeMatchesString(types[i], clazz)) {
 					return true;
 				}
 			}
 			return false;
+		}
+		
+		private function typeMatchesString(type:String, str:String):Boolean {
+			return type.match(str + '$') != null;
 		}
 		
 		/*
