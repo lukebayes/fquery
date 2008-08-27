@@ -124,12 +124,14 @@ package  {
 			assertEquals('c', found[2].item);
 		}
 		
-//		public function testEachWithFQuery():void {
-//			var result:FQuery = $('Sprite');
-//			$(result).each(function(index:Number, item:Sprite):void {
-//				trace("item: " + item);
-//			});
-//		}
+		public function testEachWithFQuery():void {
+			var result:FQuery = $('Sprite');
+			var count:int;
+			$(result).each(function(index:Number, item:Sprite):void {
+				count++;
+			});
+			assertEquals(3, count);
+		}
 		
 		public function testSearchByClass():void {
 			var parent:Sprite = new Sprite();
