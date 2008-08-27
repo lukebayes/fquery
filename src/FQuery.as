@@ -97,12 +97,28 @@ package {
 				});
 				return found;
 			}
+			else if(query.match(/^#/)) {
+				return searchById(query, context);
+			}
 			else if(query.match(/^\./)) {
 				return searchByStyleName(query, context);
 			}
 			else {
 				return searchByDefinition(query, context);
 			}
+		}
+
+		private function searchById(id:String, context:*):Array {
+			id = id.replace(/^#/, '');
+			var itr:DisplayListIterator = new DisplayListIterator(context);
+			var item:Object;
+			while(itr.hasNext()) {
+				item = itr.next();
+				if(item.id == id) {
+					return [item];
+				}
+			}
+			return [];
 		}
 
 		private function searchByStyleName(clazz:String, context:*):Array {
@@ -216,6 +232,10 @@ package {
 		 */
 		public function get length():int {
 			return found.length;
+		}
+		
+		public function find(selector:String):FQuery {
+			return $(selector, this);
 		}
 	}
 }

@@ -183,5 +183,17 @@ package  {
 			found = $('.other', parent);
 			assertEquals("There are 2 other clips in the tree", 2, found.length);
 		}
+		
+		public function testSelectById():void {
+			var parent:Sprite = new Sprite();
+			var child1:MovieClip = new MovieClip();
+			var child2:MovieClip = new MovieClip();
+			child1.id = 'some-child';
+			parent.addChild(child1);
+			parent.addChild(child2);
+			
+			var result:FQuery = $(parent).find('#some-child');
+			assertEquals(1, result.length);
+		}
 	}
 }
