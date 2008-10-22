@@ -136,17 +136,25 @@ package {
 		
 		public function hasClass(style:String, item:Object=null, found:Array=null):Boolean {
 			style = style.replace(/^\./, '');
-			var len:Number;
-			var i:Number;
-			if(item != null && item.styles && item.styles.length > 0) {
-				len = item.styles.length;
-				for(i = 0; i < len; i++) {
-					if(item.styles[i] == style) {
-						return true;
+			var i:int;
+			var len:int;
+			
+			if(item != null && item.styles) {
+				if(item.styles is String) {
+					// Update the styles string to something more easily
+					// managed and searched
+					var parts:Array = item.styles.split(' ');
+					item.styles = {};
+					while(parts.length > 0) {
+						item.styles[parts.shift()] = true;
 					}
 				}
+				
+				if(item.styles[style]) {
+					return true;
+				}
 			}
-
+			
 			if(item == null && found == null) {
 				found = this.found;
 			}
@@ -236,6 +244,24 @@ package {
 		
 		public function find(selector:String):FQuery {
 			return $(selector, this);
+		}
+		
+		public function append(str:String):FQuery {
+			var parsed:DisplayObject = parseLAML(str) as DisplayObject;
+			if(parsed) {
+				for(var i:Number = 0; i < length; i++) {
+					get(i).addChild(parsed);
+				}
+				return $(parsed);
+			}
+			return null;
+		}
+		
+		private function parseLAML(str:String):Object {
+			var xml:XML = new XML(str);
+			trace("laml: " + xml);
+			var result:Object = new flash.display.Sprite();
+			return result;
 		}
 	}
 }

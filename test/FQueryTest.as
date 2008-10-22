@@ -77,7 +77,7 @@ package  {
 		public function testStyleName():void {
 			var parent:Sprite = new Sprite();
 			var child:MovieClip = new MovieClip();
-			child.styles = ['custom'];
+			child.styles = 'custom';
 			parent.addChild(child);
 
 			var result:FQuery = $('.custom', parent);
@@ -87,11 +87,11 @@ package  {
 		public function testStyleNameMore():void {
 			var parent:Sprite = new Sprite();
 			var child1:MovieClip = new MovieClip();
-			child1.styles = ['custom'];
+			child1.styles = 'custom';
 			parent.addChild(child1);
 
 			var child2:MovieClip = new MovieClip();
-			child2.styles = ['custom', 'unique'];
+			child2.styles = 'custom unique';
 			parent.addChild(child2);
 			
 			var result:FQuery = $('.custom', parent);
@@ -108,7 +108,7 @@ package  {
 		
 		public function testHasClass():void {
 			var child:MovieClip = new MovieClip();
-			child.styles = ['custom'];
+			child.styles = 'custom';
 			var result:Boolean = $(child).hasClass('custom');
 			assertTrue('Child should have custom class', result);
 		}
@@ -170,9 +170,9 @@ package  {
 			child1.addChild(child2);
 			child1.addChild(child3);
 
-			child1.styles = ['custom'];
-			child3.styles = ['other'];
-			child4.styles = ['other']; // This clip should not be in result
+			child1.styles = 'custom';
+			child3.styles = 'other';
+			child4.styles = 'other'; // This clip should not be in result
 			
 			var found:FQuery = $('.custom MovieClip', parent);
 			assertEquals("There are 2 MovieClips beneath the custom child", 2, found.length);
@@ -193,6 +193,12 @@ package  {
 			parent.addChild(child2);
 			
 			var result:FQuery = $(parent).find('#some-child');
+			assertEquals(1, result.length);
+		}
+		
+		public function testAppend():void {
+			var parent:Sprite = new Sprite();
+			var result:FQuery = $(parent).append('<fl:Sprite xmlns:fl="flash.display.*" id="my-child" name="myChild" />');
 			assertEquals(1, result.length);
 		}
 	}

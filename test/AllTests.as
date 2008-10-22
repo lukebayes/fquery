@@ -9,6 +9,7 @@ package {
 	import asunit.framework.TestSuite;
 	import fquery.collection.DisplayListIteratorTest;
 	import fquery.collection.DisplayObjectIteratorTest;
+	import fquery.laml.LAMLParserTest;
 	import fquery.reflect.ReflectionTest;
 	import FQueryTest;
 
@@ -17,6 +18,7 @@ package {
 		public function AllTests() {
 			addTest(new fquery.collection.DisplayListIteratorTest());
 			addTest(new fquery.collection.DisplayObjectIteratorTest());
+			addTest(new fquery.laml.LAMLParserTest());
 			addTest(new fquery.reflect.ReflectionTest());
 			addTest(new FQueryTest());
 		}
