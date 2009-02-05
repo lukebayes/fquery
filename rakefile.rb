@@ -43,6 +43,9 @@ deploy :deploy
 desc 'Create documentation'
 document :doc
 
+desc 'Compile and run from cruise control'
+ci :cruise
+
 desc 'Compile a SWC file'
 swc :swc
 
