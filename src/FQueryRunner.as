@@ -1,6 +1,5 @@
 package {
 	import asunit.textui.TestRunner;
-	import fquery.laml.LAMLParserTest;
 	
 	public class FQueryRunner extends TestRunner {
 		
