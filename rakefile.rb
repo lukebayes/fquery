@@ -31,14 +31,8 @@ mxmlc 'bin/FQueryExample.swf' do |t|
   t.input = 'src/FQueryExample.as'
 end
 
-desc 'Compile and debug the application'
-debug :debug
-
 desc 'Compile run the test harness'
 unit :test
-
-desc 'Compile the optimized deployment'
-deploy :deploy
 
 desc 'Create documentation'
 document :doc
