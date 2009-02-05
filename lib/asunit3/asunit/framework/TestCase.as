@@ -234,6 +234,7 @@ package asunit.framework {
 		
 		private function runMethod(methodName:String):void {
 			try {
+				//trace("Test: " + getName() + " and method is " + methodName);
 				methodIsAsynchronous = false;
 				if(currentState == PRE_SET_UP) {
 					currentState = SET_UP;
@@ -315,6 +316,9 @@ package asunit.framework {
 			if(handler == null) {
 				handler = function(args:*):* {};
 			}
+			if(isNaN(duration)) {
+				duration = DEFAULT_TIMEOUT;
+			}
 			methodIsAsynchronous = true;
 			timeout = new Timer(duration, 1);
 			timeout.addEventListener(TimerEvent.TIMER_COMPLETE, getTimeoutComplete(duration));
@@ -372,11 +376,12 @@ package asunit.framework {
 			return getContext().addChild(child);
 		}
 
-		protected function removeChild(child:DisplayObject):DisplayObject {
-			if(child == null) {
-				throw new IllegalOperationError("TestCase.removeChild must have non-null parameter child");
+		protected function removeChild(displayObject:DisplayObject):DisplayObject {
+			if (displayObject && displayObject.parent === getContext())
+			{
+				return getContext().removeChild(displayObject);
 			}
-			return getContext().removeChild(child);
+			return null;
 		}
 
 //		public function fail(message:String):void {

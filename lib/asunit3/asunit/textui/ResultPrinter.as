@@ -9,8 +9,11 @@ package asunit.textui {
 	
 	import flash.display.Sprite;
 	import flash.events.*;
+	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.getTimer;
+	import flash.utils.setInterval;
 	import flash.utils.setTimeout;
 
 	public class ResultPrinter extends Sprite implements TestListener {
@@ -21,11 +24,19 @@ package asunit.textui {
 		private var bar:SuccessBar;
 		private var barHeight:Number = 3;
 		private var showTrace:Boolean;
+		private var startTime:Number;
+		private var testTimes:Array;
 
 		public function ResultPrinter(showTrace:Boolean = false) {
 			this.showTrace = showTrace;
+			testTimes = new Array();
 			configureAssets();
 			println();
+
+			// Create a loop so that the FDBTask
+			// can halt execution properly:
+			setInterval(function():void {
+		    }, 500);
 		}
 
 		private function configureAssets():void {
@@ -41,6 +52,8 @@ package asunit.textui {
 			textArea.defaultTextFormat = format;
 			addChild(textArea);
 			println("AsUnit " + Version.id() + " by Luke Bayes and Ali Mills");
+			println("");
+			println("Flash Player version: " + Capabilities.version);
 
 			bar = new SuccessBar();
 			addChild(bar);
@@ -162,7 +175,21 @@ package asunit.textui {
 					         ",  Failures: "+result.failureCount()+
 					         ",  Errors: "+result.errorCount());
 			}
+			
+			printTimeSummary();
 		    println();
+		}
+		
+		protected function printTimeSummary():void {
+		    testTimes.sortOn('duration', Array.NUMERIC | Array.DESCENDING);
+		    println();
+		    println();
+		    println('Time Summary:');
+		    println();
+		    var len:Number = testTimes.length;
+		    for(var i:Number = 0; i < len; i++) {
+				println(testTimes[i].duration + 'ms : ' + testTimes[i].name);
+		    }
 		}
 
 		/**
@@ -200,15 +227,10 @@ package asunit.textui {
 		}
 
 		/**
-		 * @see asunit.framework.TestListener#endTest(Test)
-		 */
-		public function endTest(test:Test):void {
-		}
-
-		/**
 		 * @see asunit.framework.TestListener#startTest(Test)
 		 */
 		public function startTest(test:Test):void {
+			startTime = getTimer();
 			var count:uint = test.countTestCases();
 			for(var i:uint; i < count; i++) {
 				print(".");
@@ -217,6 +239,14 @@ package asunit.textui {
 					fColumn = 0;
 				}
 			}
+		}
+
+		/**
+		 * @see asunit.framework.TestListener#endTest(Test)
+		 */
+		public function endTest(test:Test):void {
+			var duration:Number = getTimer() - startTime;
+			testTimes.push({name: test.getName(), duration: duration});
 		}
 	}
 }

@@ -5,7 +5,7 @@ package asunit.textui {
 	import asunit.framework.TestFailure;
 	import asunit.framework.TestListener;
 	import asunit.framework.TestResult;
-	
+	import flash.utils.setTimeout;
 	import flash.utils.Dictionary;
 	
 	public class XMLResultPrinter extends ResultPrinter {
